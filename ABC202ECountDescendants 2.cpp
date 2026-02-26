@@ -1,0 +1,123 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <array>
+#include <string>
+#include <map>
+#include <string>
+#include <set>
+#include <queue>
+#include <cmath>
+#include <tuple>
+#include <stack>
+#include <numeric>
+#include <climits>
+#include <deque> 
+#include <chrono>
+#include <unordered_map>
+#include <cstring>
+using namespace std;
+void __print(int x) {cerr << x;}
+void __print(long x) {cerr << x;}
+void __print(long long x) {cerr << x;}
+void __print(unsigned x) {cerr << x;}
+void __print(unsigned long x) {cerr << x;}
+void __print(unsigned long long x) {cerr << x;}
+void __print(float x) {cerr << x;}
+void __print(double x) {cerr << x;}
+void __print(long double x) {cerr << x;}
+void __print(char x) {cerr << '\'' << x << '\'';}
+void __print(const char *x) {cerr << '\"' << x << '\"';}
+void __print(const string &x) {cerr << '\"' << x << '\"';}
+void __print(bool x) {cerr << (x ? "true" : "false");}
+template<typename T, typename V>
+void __print(const pair<T, V> &x) {cerr << '{'; __print(x.first); cerr << ','; __print(x.second); cerr << '}';}
+template<typename T>
+void __print(const T &x) {int f = 0; cerr << '{'; for (auto &i: x) cerr << (f++ ? "," : ""), __print(i); cerr << "}";}
+void _print() {cerr << "]\n";}
+template <typename T, typename... V>
+void _print(T t, V... v) {__print(t); if (sizeof...(v)) cerr << ", "; _print(v...);}
+#ifndef ONLINE_JUDGE
+#define debug(x...) cerr << "[" << #x << "] = ["; _print(x)
+#define systemwait system("read -p \"Press Enter to continue...\"");
+#define debugbreak exit(0)
+#else
+#define debug(x...) 
+#define systemwait
+#define debugbreak
+#endif
+
+#define int long long
+#define endl '\n'
+#define all(x) (x).begin(),(x).end()
+#define sqsq(x) (x)*(x)
+#define pii pair<int,int>
+#define vi vector<int>
+#define vii vector<pii>
+#define fi first
+#define se second
+
+const int INF=1e9+7;
+const int MOD=1e9+7;
+//const int MOD=998244353;
+const int maxn=2e5+10;
+
+vi adj[maxn],sdep[maxn];
+int N,P[maxn],Q,dfn[maxn],tot,siz[maxn];
+
+void DFS(int u,int fa,int dep) {
+    tot++;
+    dfn[u]=tot;
+    siz[u]=1;
+    sdep[dep].push_back(dfn[u]);
+    for(int v:adj[u]) {
+        if(v!=fa) {
+            DFS(v,u,(dep+1));
+            siz[u]+=siz[v];
+        }
+    }
+}
+
+void solve() {
+//--------Initiallize--------
+//--------Input--------
+    cin>>N;
+    for(int i=2;i<=N;i++) {
+        cin>>P[i];
+        adj[i].push_back(P[i]);
+        adj[P[i]].push_back(i);
+    }
+    DFS(1,1,0);
+    // for(int i=1;i<=N;i++) {
+    //     sort(sdep[i].begin(),sdep[i].end());
+        // for(int it:sdep[i]) {
+        //     debug(i,it);
+        // }
+    // }
+    cin>>Q;
+    while(Q--) {
+        int u,d;
+        cin>>u>>d;
+        if(sdep[d].empty()) {
+            cout<<0<<endl;
+            continue;
+        }
+        int pos1=lower_bound(sdep[d].begin(),sdep[d].end(),dfn[u])-sdep[d].begin(), pos2=upper_bound(sdep[d].begin(),sdep[d].end(),(dfn[u]+siz[u]-1))-sdep[d].begin();
+        // debug(siz[u],pos1,pos2);
+        cout<<(pos2-pos1)<<endl;
+    }
+    return;
+
+}
+
+int32_t main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    
+    int TT=1;
+    //cin>>TT;
+    for(int i=1;i<=TT;++i) {
+        solve();
+    }
+    return 0;
+}
